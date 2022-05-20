@@ -1,4 +1,4 @@
-import "dvd" -- DEMO
+import "Code/dvd" -- DEMO
 local dvd = dvd(1, -1) -- DEMO
 
 local gfx <const> = playdate.graphics
