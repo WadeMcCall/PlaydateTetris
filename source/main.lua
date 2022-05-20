@@ -16,8 +16,8 @@ local function loadGame()
 end
 
 local function updateGame()
-	game:update()
 	gfx.sprite.update()
+	game:update()
 end
 
 loadGame()
