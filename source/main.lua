@@ -1,28 +1,27 @@
-import "Code/dvd" -- DEMO
-local dvd = dvd(1, -1) -- DEMO
-
 local gfx <const> = playdate.graphics
 local font = gfx.font.new('font/Mini Sans 2X') -- DEMO
 
+local sprite = nil
+
+local function loadSprites() 
+	local spriteImage = gfx.image.new("sprites/zBlock")
+	sprite = gfx.sprite.new(spriteImage)
+	sprite:moveTo(10,10)
+	sprite:add()
+end
+
 local function loadGame()
-	playdate.display.setRefreshRate(50) -- Sets framerate to 50 fps
+	loadSprites()
 	math.randomseed(playdate.getSecondsSinceEpoch()) -- seed for math.random
 	gfx.setFont(font) -- DEMO
 end
 
 local function updateGame()
-	dvd:update() -- DEMO
-end
-
-local function drawGame()
-	gfx.clear() -- Clears the screen
-	dvd:draw() -- DEMO
+	gfx.sprite.update()
 end
 
 loadGame()
 
 function playdate.update()
-	updateGame()
-	drawGame()
-	playdate.drawFPS(0,0) -- FPS widget
+	gfx.sprite.update()
 end
