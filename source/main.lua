@@ -9,7 +9,6 @@ local font = gfx.font.new('font/Mini Sans 2X') -- DEMO
 local game = nil
 
 local function loadGame()
-	loadSprites()
 	game = Game()
 
 	math.randomseed(playdate.getSecondsSinceEpoch()) -- seed for math.random
