@@ -1,8 +1,0 @@
-name=Teeteris
-author=Zach and Wade
-description=Tetris type game
-bundleID=com.organization.package
-version=0.0.1
-buildNumber=1
-pdxversion=11000
-buildtime=706395340
