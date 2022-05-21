@@ -9,7 +9,7 @@ local gfx <const> = playdate.graphics
 class("Block").extends()
 
 function Block:init()
-
+    
 end
 
 function Block:update()

@@ -24,4 +24,5 @@ loadGame()
 
 function playdate.update()
 	updateGame()
+    playdate.timer.updateTimers()
 end

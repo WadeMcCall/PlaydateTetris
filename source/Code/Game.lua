@@ -1,5 +1,6 @@
 import "CoreLibs/graphics"
 import "CoreLibs/object"
+import "CoreLibs/timer"
 import "Code/UIBox"
 
 local gfx <const> = playdate.graphics
@@ -19,7 +20,29 @@ function Game:loadBackground()
     )
 end
 
+function Game:getStepDuration() 
+    return (500)/math.sqrt(self.speed)
+end
+
+function Game:stepTimer()
+    function step()
+        self:swapColors()
+    end
+    self.stepTimer = playdate.timer.performAfterDelay(self:getStepDuration(), step)
+end
+
+function Game:swapColors()
+	if (gfx.getBackgroundColor() == gfx.kColorWhite) then
+		gfx.setBackgroundColor(gfx.kColorBlack)
+		gfx.setImageDrawMode("inverted")
+	else
+		gfx.setBackgroundColor(gfx.kColorWhite)
+		gfx.setImageDrawMode("copy")
+	end
+end
+
 function Game:setUpGame()
+    self:stepTimer()
     self:loadBackground()
 end
 
@@ -36,6 +59,8 @@ function Game:init()
         SpeedBox = UIBox(336, 120, self.speed),
         LinesBox = UIBox(336, 184, self.lines)
     }
+
+    self.stepTimer = nil
 
     self:setUpGame()
 end
