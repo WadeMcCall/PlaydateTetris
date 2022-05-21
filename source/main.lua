@@ -10,8 +10,6 @@ local game = nil
 
 local function loadGame()
 	game = Game()
-
-	math.randomseed(playdate.getSecondsSinceEpoch()) -- seed for math.random
 	gfx.setFont(font) -- DEMO
 end
 
@@ -20,6 +18,7 @@ local function updateGame()
 	game:update()
 end
 
+math.randomseed(playdate.getSecondsSinceEpoch()) -- seed for math.random
 loadGame()
 
 function playdate.update()

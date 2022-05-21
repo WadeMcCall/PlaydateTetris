@@ -2,6 +2,7 @@ import "CoreLibs/graphics"
 import "CoreLibs/object"
 import "CoreLibs/timer"
 import "Code/UIBox"
+import "Code/Block"
 
 local gfx <const> = playdate.graphics
 
@@ -20,29 +21,44 @@ function Game:loadBackground()
     )
 end
 
+function Game:setNextBlock()
+    local num = math.random(7)
+
+    -- Switch blocks are not a thing in lua so I am stringing ifs together...
+
+    if(num == 1) then          -- I block
+        self.nextBlock = IBlock()
+    elseif (num == 2) then     -- L block
+        self.nextBlock = LBlock()
+    elseif (num == 3) then     -- S block
+        self.nextBlock = SBlock()
+    elseif (num == 4) then     -- Square block
+        self.nextBlock = SquareBlock()
+    elseif (num == 5) then     -- T block
+        self.nextBlock = TBlock()
+    elseif (num == 6) then     -- Z Block
+        self.nextBlock = ZBlock()
+    elseif (num == 7) then     -- Reverse L Block
+        self.nextBlock = ReverseLBlock()
+    end
+
+    self.nextBlock:setPosition(30, 80)
+end
+
 function Game:getStepDuration() 
     return (500)/math.sqrt(self.speed)
 end
 
-function Game:stepTimer()
+function Game:setStepTimer()
     function step()
-        self:swapColors()
+        if(self.nextBlock == nil) then self:setNextBlock() end
+        self:setStepTimer()
     end
     self.stepTimer = playdate.timer.performAfterDelay(self:getStepDuration(), step)
 end
 
-function Game:swapColors()
-	if (gfx.getBackgroundColor() == gfx.kColorWhite) then
-		gfx.setBackgroundColor(gfx.kColorBlack)
-		gfx.setImageDrawMode("inverted")
-	else
-		gfx.setBackgroundColor(gfx.kColorWhite)
-		gfx.setImageDrawMode("copy")
-	end
-end
-
 function Game:setUpGame()
-    self:stepTimer()
+    self:setStepTimer()
     self:loadBackground()
 end
 
@@ -61,6 +77,8 @@ function Game:init()
     }
 
     self.stepTimer = nil
+    self.currentBlock = nil
+    self.nextBlock = nil
 
     self:setUpGame()
 end
