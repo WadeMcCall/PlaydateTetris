@@ -32,9 +32,9 @@ function Game:init()
     self.CrankMeter = 0
     self.lines = 0
     self.scores = {
-        ScoreBox = UIBox(268, 42, self.score),
-        SpeedBox = UIBox(268, 106, self.speed),
-        LinesBox = UIBox(268, 170, self.lines)
+        ScoreBox = UIBox(336, 56, self.score),
+        SpeedBox = UIBox(336, 120, self.speed),
+        LinesBox = UIBox(336, 184, self.lines)
     }
 
     self:setUpGame()
