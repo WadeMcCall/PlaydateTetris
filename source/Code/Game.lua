@@ -3,7 +3,6 @@ import "CoreLibs/object"
 import "Code/UIBox"
 
 local gfx <const> = playdate.graphics
-local scores = nil
 
 class("Game").extends()
 
@@ -21,20 +20,15 @@ function Game:loadBackground()
 end
 
 function Game:drawScores()
-    gfx.drawTextInRect(tostring(self.score), scores.ScoreBox.x, scores.ScoreBox.y, scores.ScoreBox.width, scores.ScoreBox.height)
-    gfx.drawTextInRect(tostring(self.speed), scores.SpeedBox.x, scores.SpeedBox.y, scores.SpeedBox.width, scores.SpeedBox.height)
-    gfx.drawTextInRect(tostring(self.lines), scores.LinesBox.x, scores.LinesBox.y, scores.LinesBox.width, scores.LinesBox.height)
+    gfx.drawTextInRect(tostring(self.score), self.scores.ScoreBox.x, self.scores.ScoreBox.y, self.scores.ScoreBox.width, self.scores.ScoreBox.height)
+    gfx.drawTextInRect(tostring(self.speed), self.scores.SpeedBox.x, self.scores.SpeedBox.y, self.scores.SpeedBox.width, self.scores.SpeedBox.height)
+    gfx.drawTextInRect(tostring(self.lines), self.scores.LinesBox.x, self.scores.LinesBox.y, self.scores.LinesBox.width, self.scores.LinesBox.height)
 
     return true
 end
 
 function Game:setUpGame()
     self:loadBackground()
-    scores = {
-        ScoreBox = UIBox(268, 42),
-        SpeedBox = UIBox(268, 106),
-        LinesBox = UIBox(268, 170),
-    }
     self:drawScores()
 end
 
@@ -46,6 +40,11 @@ function Game:init()
     self.speed = 1
     self.CrankMeter = 0
     self.lines = 0
+    self.scores = {
+        ScoreBox = UIBox(268, 42),
+        SpeedBox = UIBox(268, 106),
+        LinesBox = UIBox(268, 170),
+    }
 
     self:setUpGame()
 end
