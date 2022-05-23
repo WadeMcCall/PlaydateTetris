@@ -25,35 +25,52 @@ function Game:setNextBlock()
     local num = math.random(7)
 
     -- Switch blocks are not a thing in lua so I am stringing ifs together...
+    local xSpawnOffset = 0
+    local ySpawnOffset = 0
 
     if(num == 1) then          -- I block
+        xSpawnOffset = -8
         self.nextBlock = IBlock()
     elseif (num == 2) then     -- L block
         self.nextBlock = LBlock()
+        ySpawnOffset = -8
     elseif (num == 3) then     -- S block
         self.nextBlock = SBlock()
+        xSpawnOffset = -8
     elseif (num == 4) then     -- Square block
         self.nextBlock = SquareBlock()
     elseif (num == 5) then     -- T block
         self.nextBlock = TBlock()
+        xSpawnOffset = -8
     elseif (num == 6) then     -- Z Block
-        self.nextBlock = ZBlock()
+        self.nextBlock = ZBlock()  
+        xSpawnOffset = -8
     elseif (num == 7) then     -- Reverse L Block
         self.nextBlock = ReverseLBlock()
+        ySpawnOffset = -8
     end
 
-    self.nextBlock:MoveTo(40, 80)
+    self.nextBlock:MoveTo(40 + xSpawnOffset, 80 + ySpawnOffset)
+end
+
+function Game:placeBlock()
+    -- TODO check if there are any lines and do the logic for that
+
+    self:newCurrentBlock()
 end
 
 function Game:newCurrentBlock()
     self.currentBlock = self.nextBlock
-    self.currentBlock:MoveTo(160, 10)
+    self.currentBlock:MoveTo(160, 16)
     self:setNextBlock()
 end
 
 function Game:moveDown()
 	if(self.currentBlock == nil) then return end
+    if (self.currentBlock:IsAboveFloor()) then return false end
+    -- TODO collide with other placed blocks
     self.currentBlock:MoveTo(self.currentBlock.position.x, self.currentBlock.position.y + 16)
+    return true
 end
 
 function Game:moveLeft()
@@ -73,8 +90,12 @@ end
 function Game:setStepTimer()
     function step()
         if(self.nextBlock == nil) then self:setNextBlock() end
-        if(self.currentBlock == nil) then self:newCurrentBlock() else self:moveDown() end
-    
+        if(self.currentBlock == nil) then
+            self:newCurrentBlock() 
+        else
+            if not self:moveDown() then self:placeBlock() end
+        end
+
         self:setStepTimer()
     end
     self.stepTimer = playdate.timer.performAfterDelay(self:getStepDuration(), step)
@@ -110,8 +131,8 @@ function Game:init()
     self.lines = 0
     self.scores = {
         ScoreBox = UIBox(336, 56, self.score),
-        SpeedBox = UIBox(336, 120, self.speed),
-        LinesBox = UIBox(336, 184, self.lines)
+        LinesBox = UIBox(336, 120, self.lines),
+        SpeedBox = UIBox(336, 184, self.speed)
     }
 
     self.stepTimer = nil
