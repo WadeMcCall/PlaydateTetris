@@ -27,22 +27,22 @@ function Game:setNextBlock()
     -- Switch blocks are not a thing in lua so I am stringing ifs together...
 
     if(num == 1) then          -- I block
-        self.nextBlock = IBlock()
+        self.nextBlock = IBlock(200, 20)
     elseif (num == 2) then     -- L block
-        self.nextBlock = LBlock()
+        self.nextBlock = LBlock(200, 160)
     elseif (num == 3) then     -- S block
-        self.nextBlock = SBlock()
+        self.nextBlock = SBlock(200, 160)
     elseif (num == 4) then     -- Square block
-        self.nextBlock = SquareBlock()
+        self.nextBlock = SquareBlock(200, 160)
     elseif (num == 5) then     -- T block
-        self.nextBlock = TBlock()
+        self.nextBlock = TBlock(200, 20)
     elseif (num == 6) then     -- Z Block
-        self.nextBlock = ZBlock()
+        self.nextBlock = ZBlock(200, 160)
     elseif (num == 7) then     -- Reverse L Block
-        self.nextBlock = ReverseLBlock()
+        self.nextBlock = ReverseLBlock(200, 160)
     end
 
-    self.nextBlock:setPosition(30, 80)
+    self.nextBlock:MoveTo(40, 57)
 end
 
 function Game:getStepDuration() 
@@ -55,6 +55,21 @@ function Game:setStepTimer()
         self:setStepTimer()
     end
     self.stepTimer = playdate.timer.performAfterDelay(self:getStepDuration(), step)
+end
+
+function Game:setScore(score)
+    self.score = score
+    self.scores.ScoreBox:setText(self.score)
+end
+
+function Game:setSpeed(speed)
+    self.speed = speed
+    self.scores.SpeedBox:setText(self.speed)
+end
+
+function Game:setLines(lines)
+    self.lines = lines
+    self.scores.LinesBox:setText(self.lines)
 end
 
 function Game:setUpGame()
