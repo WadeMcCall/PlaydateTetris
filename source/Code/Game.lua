@@ -27,22 +27,43 @@ function Game:setNextBlock()
     -- Switch blocks are not a thing in lua so I am stringing ifs together...
 
     if(num == 1) then          -- I block
-        self.nextBlock = IBlock(200, 20)
+        self.nextBlock = IBlock()
     elseif (num == 2) then     -- L block
-        self.nextBlock = LBlock(200, 160)
+        self.nextBlock = LBlock()
     elseif (num == 3) then     -- S block
-        self.nextBlock = SBlock(200, 160)
+        self.nextBlock = SBlock()
     elseif (num == 4) then     -- Square block
-        self.nextBlock = SquareBlock(200, 160)
+        self.nextBlock = SquareBlock()
     elseif (num == 5) then     -- T block
-        self.nextBlock = TBlock(200, 20)
+        self.nextBlock = TBlock()
     elseif (num == 6) then     -- Z Block
-        self.nextBlock = ZBlock(200, 160)
+        self.nextBlock = ZBlock()
     elseif (num == 7) then     -- Reverse L Block
-        self.nextBlock = ReverseLBlock(200, 160)
+        self.nextBlock = ReverseLBlock()
     end
 
-    self.nextBlock:MoveTo(40, 57)
+    self.nextBlock:MoveTo(40, 80)
+end
+
+function Game:newCurrentBlock()
+    self.currentBlock = self.nextBlock
+    self.currentBlock:MoveTo(160, 10)
+    self:setNextBlock()
+end
+
+function Game:moveDown()
+	if(self.currentBlock == nil) then return end
+    self.currentBlock:MoveTo(self.currentBlock.position.x, self.currentBlock.position.y + 16)
+end
+
+function Game:moveLeft()
+	if(self.currentBlock == nil) then return end
+    self.currentBlock:MoveTo(self.currentBlock.position.x - 16, self.currentBlock.position.y)
+end
+
+function Game:moveRight()
+	if(self.currentBlock == nil) then return end
+    self.currentBlock:MoveTo(self.currentBlock.position.x + 16, self.currentBlock.position.y)
 end
 
 function Game:getStepDuration() 
@@ -52,6 +73,8 @@ end
 function Game:setStepTimer()
     function step()
         if(self.nextBlock == nil) then self:setNextBlock() end
+        if(self.currentBlock == nil) then self:newCurrentBlock() else self:moveDown() end
+    
         self:setStepTimer()
     end
     self.stepTimer = playdate.timer.performAfterDelay(self:getStepDuration(), step)

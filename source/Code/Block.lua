@@ -24,7 +24,22 @@ function Block:MoveTo(x, y)
 end
 
 function Block:Rotate(left)
-
+    if(left) then
+        for i = 1, 4 do
+            local previousx = self.tetriminos[i].offsetX
+            local previousy = self.tetriminos[i].offsetY
+            self.tetriminos[i].offsetX = -previousy
+            self.tetriminos[i].offsetY = previousx
+        end
+    else 
+        for i = 1, 4 do
+            local previousx = self.tetriminos[i].offsetX
+            local previousy = self.tetriminos[i].offsetY
+            self.tetriminos[i].offsetX = previousy
+            self.tetriminos[i].offsetY = -previousx
+        end
+    end
+    self:MoveTo(self.position.x, self.position.y)
 end
 
 function Block:update()
@@ -59,10 +74,10 @@ function IBlock:init(_x, _y)
 end
 
 function IBlock:setTetriminoOffsetDefaults()
-    self.tetriminos[1].offsetY = 0
-    self.tetriminos[2].offsetY = 15
-    self.tetriminos[3].offsetY = 30
-    self.tetriminos[4].offsetY = 45
+    self.tetriminos[1].offsetY = -22.5
+    self.tetriminos[2].offsetY = -7.5
+    self.tetriminos[3].offsetY = 7.5
+    self.tetriminos[4].offsetY = 22.5
 end
 
 ----------
@@ -76,10 +91,10 @@ function LBlock:init(_x, _y)
 end
 
 function LBlock:setTetriminoOffsetDefaults()
-    self.tetriminos[2].offsetY = 15
-    self.tetriminos[3].offsetY = 30
+    self.tetriminos[1].offsetY = -15
+    self.tetriminos[3].offsetY = 15
     self.tetriminos[4].offsetX = 15
-    self.tetriminos[4].offsetY = 30
+    self.tetriminos[4].offsetY = 15
 end
 
 ------------------
@@ -93,10 +108,10 @@ function ReverseLBlock:init(_x, _y)
 end
 
 function ReverseLBlock:setTetriminoOffsetDefaults()
-    self.tetriminos[2].offsetY = 15
-    self.tetriminos[3].offsetY = 30
+    self.tetriminos[1].offsetY = -15
+    self.tetriminos[3].offsetY = 15
     self.tetriminos[4].offsetX = -15
-    self.tetriminos[4].offsetY = 30
+    self.tetriminos[4].offsetY = 15
 end
 
 ----------
@@ -110,9 +125,11 @@ function SBlock:init(_x, _y)
 end
 
 function SBlock:setTetriminoOffsetDefaults()
-    self.tetriminos[2].offsetY = 15
-    self.tetriminos[3].offsetY = 15
+    self.tetriminos[1].offsetY = -7.5
+    self.tetriminos[2].offsetY = 7.5
+    self.tetriminos[3].offsetY = 7.5
     self.tetriminos[3].offsetX = -15
+    self.tetriminos[4].offsetY = -7.5
     self.tetriminos[4].offsetX = 15
 end
 
@@ -127,10 +144,14 @@ function SquareBlock:init(_x, _y)
 end
 
 function SquareBlock:setTetriminoOffsetDefaults()
-    self.tetriminos[2].offsetY = 15
-    self.tetriminos[3].offsetX = 15
-    self.tetriminos[4].offsetX = 15
-    self.tetriminos[4].offsetY = 15
+    self.tetriminos[1].offsetX = 7.5
+    self.tetriminos[1].offsetY = 7.5
+    self.tetriminos[2].offsetY = 7.5
+    self.tetriminos[2].offsetX = -7.5
+    self.tetriminos[3].offsetX = 7.5
+    self.tetriminos[3].offsetY = -7.5
+    self.tetriminos[4].offsetX = -7.5
+    self.tetriminos[4].offsetY = -7.5
 end
 
 ----------
@@ -144,8 +165,10 @@ function ZBlock:init(_x, _y)
 end
 
 function ZBlock:setTetriminoOffsetDefaults()
-    self.tetriminos[2].offsetY = 15
-    self.tetriminos[3].offsetY = 15
+    self.tetriminos[1].offsetY = -7.5
+    self.tetriminos[2].offsetY = 7.5
+    self.tetriminos[3].offsetY = 7.5
     self.tetriminos[3].offsetX = 15
     self.tetriminos[4].offsetX = -15
+    self.tetriminos[4].offsetY = -7.5
 end
