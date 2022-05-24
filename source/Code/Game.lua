@@ -85,6 +85,7 @@ function Game:moveRight()
 end
 
 function Game:getStepDuration() 
+    if(self.downPressed and self.speed < 10) then return (500)/math.sqrt(10) end
     return (500)/math.sqrt(self.speed)
 end
 
@@ -123,6 +124,7 @@ function Game:setUpGame()
 end
 
 function Game:init()
+    self.downPressed = false
     self.BoundingX1 = 10
     self.BoundingX2 = 200
     self.Bottom = 235

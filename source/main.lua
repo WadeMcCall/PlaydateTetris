@@ -35,6 +35,14 @@ function playdate.leftButtonDown()
 	game:moveLeft()
 end
 
+function playdate.downButtonDown()
+	game.downPressed = true
+end
+
+function playdate.downButtonUp()
+	game.downPressed = false
+end
+
 function playdate.rightButtonDown()
 	game:moveRight()
 end
