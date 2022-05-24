@@ -22,6 +22,7 @@ function Game:loadBackground()
 
     gfx.sprite.addEmptyCollisionSprite(0, 0, 80, 240)
     gfx.sprite.addEmptyCollisionSprite(240, 0, 164, 240)
+    gfx.sprite.addEmptyCollisionSprite(0, 240, 300, 10)
 end
 
 function Game:setNextBlock()
@@ -70,10 +71,7 @@ end
 
 function Game:moveDown()
 	if(self.currentBlock == nil) then return end
-    if (self.currentBlock:IsAboveFloor()) then return false end
-    -- TODO collide with other placed blocks
-    self.currentBlock:MoveTo(self.currentBlock.position.x, self.currentBlock.position.y + 16)
-    return true
+    return self.currentBlock:MoveToCheckCollisions(self.currentBlock.position.x, self.currentBlock.position.y + 16)
 end
 
 function Game:moveLeft()

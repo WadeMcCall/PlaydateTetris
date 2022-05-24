@@ -42,15 +42,16 @@ function Block:MoveToCheckCollisions(x, y)
         local success = self.tetriminos[i]:MoveToCheckCollisions(self.position.x + self.globalOffsetx, self.position.y + self.globalOffsety)
         if not success then 
             self:MoveTo(previousx, previousy)
-            return
+            return false
         end
     end
     self:MoveTo(x, y)
+    return true
 end
 
 function Block:IsAboveFloor()
     for i = 1, 4 do
-        if (self.position.y + self.tetriminos[i].offsetY + 16) > 240 then return true end
+        if (self.position.y + self.tetriminos[i].offsetY + 10) > 240 then return true end
     end
     return false
 end
