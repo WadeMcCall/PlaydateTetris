@@ -35,13 +35,10 @@ function Block:MoveTo(x, y)
 end
 
 function Block:MoveToCheckCollisions(x, y)
-    local previousx = self.position.x
-    local previousy = self.position.y
-    self.position = {x = x, y = y}
     for i = 1, 4 do
-        local success = self.tetriminos[i]:MoveToCheckCollisions(self.position.x + self.globalOffsetx, self.position.y + self.globalOffsety)
+        local success = self.tetriminos[i]:MoveToCheckCollisions(x + self.globalOffsetx, y + self.globalOffsety)
         if not success then 
-            self:MoveTo(previousx, previousy)
+            print("failed")
             return false
         end
     end
@@ -64,6 +61,7 @@ end
 --     |‾‾|
 --      ‾‾
 function Block:Rotate(left)
+    local success = true
     if(left) then
         self.angle -= 1
         if (self.angle < 0) then self.angle = 3 end
@@ -95,11 +93,31 @@ function Block:Rotate(left)
     else
         self.globalOffsety = 0
     end
-    self:MoveTo(self.position.x, self.position.y)
-end
+    -- -- first, we see if the rotation works as is. If so, we're done
+    if self:MoveToCheckCollisions(self.position.x, self.position.y) then 
+        return
+    end
+    -- try the same rotation to the right
+    if self:MoveToCheckCollisions(self.position.x + 16, self.position.y) then 
+        return
+    end
 
-function Block:update()
-    
+    if self:isa(IBlock) then
+        -- try the same rotation to the right again for I blocks.
+        if self:MoveToCheckCollisions(self.position.x + 32, self.position.y) then 
+            return
+        end
+    end
+    -- try the same rotation to the left
+    if self:MoveToCheckCollisions(self.position.x - 16, self.position.y) then 
+        return
+    end
+    -- try the same rotation up
+    if self:MoveToCheckCollisions(self.position.x, self.position.y - 16) then 
+        return
+    end
+    -- at this point, no moving the block has worked so we need to undo the rotation
+    self:Rotate(not left)
 end
 
 ----------
