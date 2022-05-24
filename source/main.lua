@@ -29,7 +29,7 @@ end
 function playdate.BButtonDown()
 	if(game.currentBlock == nil) then return end
     game.currentBlock:Rotate(true)
-end
+end  
 
 function playdate.leftButtonDown()
 	game:moveLeft()

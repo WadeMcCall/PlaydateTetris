@@ -19,6 +19,9 @@ function Game:loadBackground()
             gfx.clearClipRect() -- clear so we don't interfere with drawing that comes after this
         end
     )
+
+    gfx.sprite.addEmptyCollisionSprite(0, 0, 80, 240)
+    gfx.sprite.addEmptyCollisionSprite(240, 0, 164, 240)
 end
 
 function Game:setNextBlock()
@@ -44,7 +47,7 @@ function Game:setNextBlock()
         xSpawnOffset = -8
     elseif (num == 6) then     -- Z Block
         self.nextBlock = ZBlock()  
-        xSpawnOffset = -8
+        xSpawnOffset = -8 
     elseif (num == 7) then     -- Reverse L Block
         self.nextBlock = ReverseLBlock()
         ySpawnOffset = -8
@@ -55,7 +58,7 @@ end
 
 function Game:placeBlock()
     -- TODO check if there are any lines and do the logic for that
-
+    self.currentBlock:resetCollideGroups()
     self:newCurrentBlock()
 end
 
@@ -75,12 +78,12 @@ end
 
 function Game:moveLeft()
 	if(self.currentBlock == nil) then return end
-    self.currentBlock:MoveTo(self.currentBlock.position.x - 16, self.currentBlock.position.y)
+    self.currentBlock:MoveToCheckCollisions(self.currentBlock.position.x - 16, self.currentBlock.position.y)
 end
 
 function Game:moveRight()
 	if(self.currentBlock == nil) then return end
-    self.currentBlock:MoveTo(self.currentBlock.position.x + 16, self.currentBlock.position.y)
+    self.currentBlock:MoveToCheckCollisions(self.currentBlock.position.x + 16, self.currentBlock.position.y)
 end
 
 function Game:getStepDuration() 

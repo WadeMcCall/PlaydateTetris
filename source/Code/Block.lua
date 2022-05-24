@@ -21,11 +21,31 @@ function Block:init(_x, _y, tetriminoSpriteName)
     end
 end
 
+function Block:resetCollideGroups()
+    for i = 1, 4 do
+        self.tetriminos[i]:ResetCollideGroups(group)
+    end
+end
+
 function Block:MoveTo(x, y)
     self.position = {x = x, y = y}
     for i = 1, 4 do
         self.tetriminos[i]:MoveTo(self.position.x + self.globalOffsetx, self.position.y + self.globalOffsety)
     end
+end
+
+function Block:MoveToCheckCollisions(x, y)
+    local previousx = self.position.x
+    local previousy = self.position.y
+    self.position = {x = x, y = y}
+    for i = 1, 4 do
+        local success = self.tetriminos[i]:MoveToCheckCollisions(self.position.x + self.globalOffsetx, self.position.y + self.globalOffsety)
+        if not success then 
+            self:MoveTo(previousx, previousy)
+            return
+        end
+    end
+    self:MoveTo(x, y)
 end
 
 function Block:IsAboveFloor()
