@@ -9,16 +9,32 @@ local gfx <const> = playdate.graphics
 class("Game").extends()
 
 function Game:loadBackground() 
-    local backgroundImage = gfx.image.new( "sprites/board mockup" )
-    assert( backgroundImage )
+    -- local backgroundImage = gfx.image.new( "sprites/board mockup" )
+    -- assert( backgroundImage )
+    -- 
+    -- gfx.sprite.setBackgroundDrawingCallback(
+    --     function( x, y, width, height )
+    --         gfx.setClipRect( x, y, width, height ) -- let's only draw the part of the screen that's dirty
+    --         backgroundImage:draw( 0, 0 )
+    --         gfx.clearClipRect() -- clear so we don't interfere with drawing that comes after this
+    --     end
+    -- )
 
-    gfx.sprite.setBackgroundDrawingCallback(
-        function( x, y, width, height )
-            gfx.setClipRect( x, y, width, height ) -- let's only draw the part of the screen that's dirty
-            backgroundImage:draw( 0, 0 )
-            gfx.clearClipRect() -- clear so we don't interfere with drawing that comes after this
-        end
-    )
+    local scoreBoard = gfx.image.new("sprites/ScoreboardNew")
+    local nextBlockSide = gfx.image.new("sprites/NextBlockSide")
+
+    local nextBlockSprite = gfx.sprite.new(nextBlockSide)
+    nextBlockSprite:setZIndex(-10)
+    local scoreBoardSprite = gfx.sprite.new(scoreBoard)
+    scoreBoardSprite:setZIndex(-10)
+
+    nextBlockSprite:moveTo(40,120)
+    scoreBoardSprite:moveTo(320, 120)
+    nextBlockSprite:add()
+    scoreBoardSprite:add()
+
+    nextBlockSprite:setCollideRect(0, 0, 80, 240)
+    scoreBoardSprite:setCollideRect(240, 0, 164, 240)
 
     gfx.sprite.addEmptyCollisionSprite(0, 0, 80, 240)
     gfx.sprite.addEmptyCollisionSprite(240, 0, 164, 240)
@@ -114,6 +130,8 @@ function Game:checkForLines()
     if(numLines == 3) then self:setScore(self.score + 600) end
     if(numLines == 4) then self:setScore(self.score + 1000) end
 
+    if self.score > self.maxScore then self:setMaxScore(self.score) end
+
     if(self.lines/10 > self.speed) then self:setSpeed(math.floor((self.lines/10) + 1)) end
 
     local distanceDown = 0
@@ -182,6 +200,11 @@ function Game:setScore(score)
     self.scores.ScoreBox:setText(self.score)
 end
 
+function Game:setMaxScore(score)
+    self.maxScore = score
+    self.scores.MaxScoreBox:setText(score)
+end
+
 function Game:setSpeed(speed)
     self.speed = speed
     self.scores.SpeedBox:setText(self.speed)
@@ -203,13 +226,15 @@ function Game:init()
     self.BoundingX2 = 200
     self.Bottom = 235
     self.score = 0
+    self.maxScore = 0
     self.speed = 1
     self.CrankMeter = 0
     self.lines = 0
     self.scores = {
-        ScoreBox = UIBox(336, 56, self.score),
-        LinesBox = UIBox(336, 120, self.lines),
-        SpeedBox = UIBox(336, 184, self.speed)
+        ScoreBox = UIBox(336, 52, self.score),
+        LinesBox = UIBox(336, 108, self.lines),
+        SpeedBox = UIBox(336, 160, self.speed),
+        MaxScoreBox = UIBox(336, 214, self.maxScore)
     }
 
     self.placedTetriminos = {}
