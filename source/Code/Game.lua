@@ -101,8 +101,8 @@ function Game:checkForLines()
     end
 
     if(numLines == 1) then self:setScore(self.score + 100) end
-    if(numLines == 2) then self:setScore(self.score + 200) end
-    if(numLines == 3) then self:setScore(self.score + 400) end
+    if(numLines == 2) then self:setScore(self.score + 300) end
+    if(numLines == 3) then self:setScore(self.score + 600) end
     if(numLines == 4) then self:setScore(self.score + 1000) end
 
     if(self.lines/10 > self.speed) then self:setSpeed(math.floor((self.lines/10) + 1)) end
