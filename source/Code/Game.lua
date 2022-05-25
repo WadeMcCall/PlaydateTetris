@@ -68,7 +68,7 @@ end
 
 function Game:checkLine(sprites)
     local count = 0
-    for k, tetrimino in pairs(sprites) do
+    for tetrimino in pairs(sprites) do
         count = count + 1
     end
     if count < 10 then return false end
@@ -83,6 +83,16 @@ function Game:LineFall(sprites, numLines)
     end
 end
 
+function Game:resetGame()
+    for k,v in pairs(self.placedTetriminos) do
+        v.sprite:remove()
+    end
+
+    self:setScore(0)
+    self:setLines(0)
+    self:setSpeed(1)
+end
+
 function Game:checkForLines() 
     local numLines = 0
     local lines = {}
@@ -92,7 +102,6 @@ function Game:checkForLines()
         if(self:checkLine(sprites)) then
             numLines = numLines + 1
             table.insert(lines, i)
-            print("line to be deleted: " .. i)
         end
     end
 
@@ -114,12 +123,10 @@ function Game:checkForLines()
             if i == v then distanceDown = distanceDown + 1 end
         end 
         self:LineFall(sprites, distanceDown)
-        print("line " .. i .. " move down " .. distanceDown .. " spaces")
     end
 end
 
 function Game:placeBlock()
-    -- TODO check if there are any lines and do the logic for that
     self.currentBlock:resetCollideGroups()
     local newMinos = self.currentBlock:getAllTetriminos()
     for k, mino in pairs(newMinos) do
@@ -132,6 +139,7 @@ end
 function Game:newCurrentBlock()
     self.currentBlock = self.nextBlock
     self.currentBlock:MoveTo(160, 16)
+    if not self.currentBlock:MoveToCheckCollisions(160, 16) then self:resetGame() end
     self:setNextBlock()
 end
 

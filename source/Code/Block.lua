@@ -42,7 +42,6 @@ function Block:MoveToCheckCollisions(x, y)
     for i = 1, 4 do
         local success = self.tetriminos[i]:MoveToCheckCollisions(x + self.globalOffsetx, y + self.globalOffsety)
         if not success then 
-            print("failed")
             return false
         end
     end
