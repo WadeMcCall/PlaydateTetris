@@ -21,6 +21,10 @@ function Block:init(_x, _y, tetriminoSpriteName)
     end
 end
 
+function Block:getAllTetriminos()
+    return self.tetriminos
+end
+
 function Block:resetCollideGroups()
     for i = 1, 4 do
         self.tetriminos[i]:ResetCollideGroups(group)

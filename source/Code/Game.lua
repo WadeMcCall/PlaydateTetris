@@ -57,9 +57,75 @@ function Game:setNextBlock()
     self.nextBlock:MoveTo(40 + xSpawnOffset, 80 + ySpawnOffset)
 end
 
+function Game:RemoveLineSprites(sprites)
+    for k, tetrimino in pairs(sprites) do
+        -- TODO play an animation 
+        local x, y = tetrimino:getPosition()
+        tetrimino:remove()
+        tetrimino = nil
+    end
+end
+
+function Game:checkLine(sprites)
+    local count = 0
+    for k, tetrimino in pairs(sprites) do
+        count = count + 1
+    end
+    if count < 10 then return false end
+    self:RemoveLineSprites(sprites)
+    return true
+end
+
+function Game:LineFall(sprites, numLines)
+    for k, sprite in pairs(sprites) do
+        local x, y = sprite:getPosition()
+        sprite:moveTo(x, y + 16 * numLines)
+    end
+end
+
+function Game:checkForLines() 
+    local numLines = 0
+    local lines = {}
+
+    for i=1, 16 do
+        local sprites = gfx.sprite.querySpritesAlongLine(88, 232 - ((i - 1) * 16), 232, 232 - ((i - 1) * 16))
+        if(self:checkLine(sprites)) then
+            numLines = numLines + 1
+            table.insert(lines, i)
+            print("line to be deleted: " .. i)
+        end
+    end
+
+    if numLines > 0 then 
+        self:setLines(self.lines + numLines)
+    end
+
+    if(numLines == 1) then self:setScore(self.score + 100) end
+    if(numLines == 2) then self:setScore(self.score + 200) end
+    if(numLines == 3) then self:setScore(self.score + 400) end
+    if(numLines == 4) then self:setScore(self.score + 1000) end
+
+    if(self.lines/10 > self.speed) then self:setSpeed(math.floor((self.lines/10) + 1)) end
+
+    local distanceDown = 0
+    for i=1, 16 do -- lines
+        local sprites = gfx.sprite.querySpritesAlongLine(88, 232 - ((i - 1) * 16), 232, 232 - ((i - 1) * 16))
+        for k,v in pairs(lines) do
+            if i == v then distanceDown = distanceDown + 1 end
+        end 
+        self:LineFall(sprites, distanceDown)
+        print("line " .. i .. " move down " .. distanceDown .. " spaces")
+    end
+end
+
 function Game:placeBlock()
     -- TODO check if there are any lines and do the logic for that
     self.currentBlock:resetCollideGroups()
+    local newMinos = self.currentBlock:getAllTetriminos()
+    for k, mino in pairs(newMinos) do
+        table.insert(self.placedTetriminos, mino)
+    end
+    self:checkForLines()
     self:newCurrentBlock()
 end
 
@@ -85,7 +151,7 @@ function Game:moveRight()
 end
 
 function Game:getStepDuration() 
-    if(self.downPressed and self.speed < 10) then return (500)/math.sqrt(10) end
+    if(self.downPressed and self.speed < 15) then return (500)/math.sqrt(15) end
     return (500)/math.sqrt(self.speed)
 end
 
@@ -137,6 +203,8 @@ function Game:init()
         LinesBox = UIBox(336, 120, self.lines),
         SpeedBox = UIBox(336, 184, self.speed)
     }
+
+    self.placedTetriminos = {}
 
     self.stepTimer = nil
     self.currentBlock = nil

@@ -9,8 +9,8 @@ local font = gfx.font.new('font/Mini Sans 2X') -- DEMO
 local game = nil
 
 local function loadGame()
-	game = Game()
 	gfx.setFont(font) -- DEMO
+	game = Game()
 end
 
 local function updateGame()

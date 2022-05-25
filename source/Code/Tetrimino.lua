@@ -36,3 +36,14 @@ end
 function Tetrimino:ResetCollideGroups()
     self.sprite:resetGroupMask()
 end
+
+function Tetrimino:fall()
+    if(self.sprite == nil) then return end
+    for i = 1, 4 do
+        local x, y = self.sprite:getPosition()
+        if(self:MoveToCheckCollisions(x, y + 16)) then self.sprite:moveTo(x, y + 16) 
+        else
+            return
+        end
+    end
+end

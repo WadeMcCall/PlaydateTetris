@@ -20,6 +20,7 @@ function UIBox:init(x, y, text)
 end
 
 function UIBox:drawText()
+    self.image:clear(gfx.kColorClear)
     gfx.pushContext(self.image)
         gfx.drawText(self.text , 0, 0)
     gfx.popContext()
