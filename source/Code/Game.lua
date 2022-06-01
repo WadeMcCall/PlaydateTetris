@@ -6,20 +6,9 @@ import "Code/Block"
 
 local gfx <const> = playdate.graphics
 
-class("Game").extends()
+Game = {}
 
 function Game:loadBackground() 
-    -- local backgroundImage = gfx.image.new( "sprites/board mockup" )
-    -- assert( backgroundImage )
-    -- 
-    -- gfx.sprite.setBackgroundDrawingCallback(
-    --     function( x, y, width, height )
-    --         gfx.setClipRect( x, y, width, height ) -- let's only draw the part of the screen that's dirty
-    --         backgroundImage:draw( 0, 0 )
-    --         gfx.clearClipRect() -- clear so we don't interfere with drawing that comes after this
-    --     end
-    -- )
-
     local scoreBoard = gfx.image.new("sprites/ScoreboardNew")
     local nextBlockSide = gfx.image.new("sprites/NextBlockSide")
 
@@ -76,7 +65,6 @@ end
 function Game:RemoveLineSprites(sprites)
     for k, tetrimino in pairs(sprites) do
         -- TODO play an animation 
-        local x, y = tetrimino:getPosition()
         tetrimino:remove()
         tetrimino = nil
     end
@@ -101,7 +89,7 @@ end
 
 function Game:resetGame()
     for k,v in pairs(self.placedTetriminos) do
-        v.sprite:remove()
+        v:remove()
     end
 
     self:setScore(0)
@@ -112,12 +100,16 @@ end
 function Game:checkForLines() 
     local numLines = 0
     local lines = {}
-
+    
     for i=1, 16 do
-        local sprites = gfx.sprite.querySpritesAlongLine(88, 232 - ((i - 1) * 16), 232, 232 - ((i - 1) * 16))
+        local sprites = gfx.sprite.querySpritesAlongLine(88, 232 - ((i - 1) * 16), 232, 232 - ((i - 1) * 16)) -- Iterate through the lines from bottom to top
         if(self:checkLine(sprites)) then
-            numLines = numLines + 1
+            numLines += 1
             table.insert(lines, i)
+        else
+            for k, v in pairs(sprites) do
+                v:fall(numLines)
+            end
         end
     end
 
@@ -133,15 +125,6 @@ function Game:checkForLines()
     if self.score > self.maxScore then self:setMaxScore(self.score) end
 
     if(self.lines/10 > self.speed) then self:setSpeed(math.floor((self.lines/10) + 1)) end
-
-    local distanceDown = 0
-    for i=1, 16 do -- lines
-        local sprites = gfx.sprite.querySpritesAlongLine(88, 232 - ((i - 1) * 16), 232, 232 - ((i - 1) * 16))
-        for k,v in pairs(lines) do
-            if i == v then distanceDown = distanceDown + 1 end
-        end 
-        self:LineFall(sprites, distanceDown)
-    end
 end
 
 function Game:placeBlock()

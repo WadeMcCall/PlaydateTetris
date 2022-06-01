@@ -27,7 +27,7 @@ end
 
 function Block:resetCollideGroups()
     for i = 1, 4 do
-        self.tetriminos[i]:ResetCollideGroups(group)
+        self.tetriminos[i]:resetGroupMask(group)
     end
 end
 

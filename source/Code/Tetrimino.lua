@@ -4,46 +4,33 @@ import "CoreLibs/sprites"
 
 local gfx <const> = playdate.graphics
 
-class("Tetrimino").extends()
+class("Tetrimino").extends(gfx.sprite)
 
 function Tetrimino:init(x, y, spriteName)
+    Tetrimino.super.init(self)
     self.offsetX = x or 0
     self.offsetY = y or 0
     
     self.image = gfx.image.new("sprites/" .. spriteName)
-    self.sprite = gfx.sprite.new( self.image )
-    self.sprite:moveTo(self.offsetX, self.offsetY)
-    self.sprite:setCollideRect( 0, 0, self.sprite:getSize() )
-    self.sprite:add()
-    self.sprite.collisionResponse = "overlap"
-    self:SetCollideGroup(1)
+    self:setImage( self.image )
+    self:moveTo(self.offsetX, self.offsetY)
+    self:setCollideRect( 0, 0, self:getSize() )
+    self:add()
+    self.collisionResponse = "overlap"
+    self:setGroups(1)
 end
 
 function Tetrimino:MoveTo(x, y)
-    self.sprite:moveTo(x + self.offsetX, y + self.offsetY)
+    self:moveTo(x + self.offsetX, y + self.offsetY)
 end
 
 function Tetrimino:MoveToCheckCollisions(x, y)
-    local actualX, actualY, collisions, length = self.sprite:checkCollisions(x + self.offsetX, y + self.offsetY)
+    local actualX, actualY, collisions, length = self:checkCollisions(x + self.offsetX, y + self.offsetY)
     if  length > 0 then return false end
     return true
 end
 
-function Tetrimino:SetCollideGroup(group)
-    self.sprite:setGroups(group)
-end
-
-function Tetrimino:ResetCollideGroups()
-    self.sprite:resetGroupMask()
-end
-
-function Tetrimino:fall()
-    if(self.sprite == nil) then return end
-    for i = 1, 4 do
-        local x, y = self.sprite:getPosition()
-        if(self:MoveToCheckCollisions(x, y + 16)) then self.sprite:moveTo(x, y + 16) 
-        else
-            return
-        end
-    end
+function Tetrimino:fall(linesToFall)
+    local x, y = self:getPosition()
+    self:moveTo(x, y + 16 * linesToFall) 
 end

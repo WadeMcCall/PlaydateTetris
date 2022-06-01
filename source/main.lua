@@ -6,45 +6,43 @@ import "Code/Game"
 local gfx <const> = playdate.graphics
 local font = gfx.font.new('font/Mini Sans 2X') -- DEMO
 
-local game = nil
-
 local function loadGame()
 	gfx.setFont(font) -- DEMO
-	game = Game()
+	Game:init()
 end
 
 local function updateGame()
 	gfx.sprite.update()
-	game:update()
+	Game:update()
 end
 
 math.randomseed(playdate.getSecondsSinceEpoch()) -- seed for math.random
 loadGame()
 
 function playdate.AButtonDown()
-	if(game.currentBlock == nil) then return end
-    game.currentBlock:Rotate()
+	if(Game.currentBlock == nil) then return end
+    Game.currentBlock:Rotate()
 end
 
 function playdate.BButtonDown()
-	if(game.currentBlock == nil) then return end
-    game.currentBlock:Rotate(true)
+	if(Game.currentBlock == nil) then return end
+    Game.currentBlock:Rotate(true)
 end  
 
 function playdate.leftButtonDown()
-	game:moveLeft()
+	Game:moveLeft()
 end
 
 function playdate.downButtonDown()
-	game.downPressed = true
+	Game.downPressed = true
 end
 
 function playdate.downButtonUp()
-	game.downPressed = false
+	Game.downPressed = false
 end
 
 function playdate.rightButtonDown()
-	game:moveRight()
+	Game:moveRight()
 end
 
 function playdate.update()
