@@ -106,7 +106,7 @@ function Game:checkForLines()
         if(self:checkLine(sprites)) then
             numLines += 1
             table.insert(lines, i)
-        else
+        elseif (numLines > 0) then
             for k, v in pairs(sprites) do
                 v:fall(numLines)
             end
@@ -230,5 +230,4 @@ function Game:init()
 end
 
 function Game:update()
-    playdate.drawFPS(0, 0)
 end
